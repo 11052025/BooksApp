@@ -29,37 +29,42 @@
     }
   }
 
-  // set up UI actions (double-click to toggle favorites)
+  // event delegation: single listener on the list
   function initActions() {
-    const images = document.querySelectorAll(`${select.list} ${select.image}`);
+    const list = document.querySelector(select.list);
 
-    for (const image of images) {
-      image.addEventListener('dblclick', (event) => {
-        event.preventDefault();
+    // listen for double-clicks on the whole list
+    list.addEventListener('dblclick', (event) => {
+      event.preventDefault();
 
-        const id = image.dataset.id;
+      // go from clicked IMG (or child) to its positioned ancestor (the link)
+      const candidate = event.target && event.target.offsetParent;
 
-        if (image.classList.contains('favorite')) {
-          // already favorite → remove
-          image.classList.remove('favorite');
+      // ensure we actually hit a book cover link
+      if (!candidate || !candidate.classList.contains('book__image')) return;
 
-          const index = favoriteBooks.indexOf(id);
-          if (index !== -1) {
-            favoriteBooks.splice(index, 1);
-          }
-        } else {
-          // not favorite yet → add
-          image.classList.add('favorite');
+      const cover = candidate;                 // <a class="book__image" ...>
+      const id = cover.dataset.id;             // book id from data-id
 
-          if (id && !favoriteBooks.includes(id)) {
-            favoriteBooks.push(id);
-          }
+      // toggle favorite state
+      if (cover.classList.contains('favorite')) {
+        // remove from favorites
+        cover.classList.remove('favorite');
+
+        const index = favoriteBooks.indexOf(id);
+        if (index !== -1) favoriteBooks.splice(index, 1);
+      } else {
+        // add to favorites
+        cover.classList.add('favorite');
+
+        if (id && !favoriteBooks.includes(id)) {
+          favoriteBooks.push(id);
         }
+      }
 
-        // (optional) debug
-        // console.log('favoriteBooks:', favoriteBooks);
-      });
-    }
+      // (optional) debug:
+      // console.log('favoriteBooks:', favoriteBooks);
+    });
   }
 
   // run after DOM is ready: render first, then bind actions
@@ -68,3 +73,4 @@
     initActions();
   });
 })();
+
