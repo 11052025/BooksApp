@@ -23,38 +23,40 @@
     const list = document.querySelector(select.list);
 
     for (const book of dataSource.books) {
-      // generate HTML using template and book data
       const html = templateBook(book);
-
-      // convert HTML string into DOM element
       const element = utils.createDOMFromHTML(html);
-
-      // append element to the list
       list.appendChild(element);
     }
   }
 
-  // set up UI actions (double-click to add to favorites)
+  // set up UI actions (double-click to toggle favorites)
   function initActions() {
     const images = document.querySelectorAll(`${select.list} ${select.image}`);
 
     for (const image of images) {
       image.addEventListener('dblclick', (event) => {
-        // prevent default link behavior
         event.preventDefault();
 
-        // add favorite class to the clicked cover
-        image.classList.add('favorite');
-
-        // read book id from data-id
         const id = image.dataset.id;
 
-        // push id to favorites (avoid duplicates)
-        if (id && !favoriteBooks.includes(id)) {
-          favoriteBooks.push(id);
+        if (image.classList.contains('favorite')) {
+          // already favorite → remove
+          image.classList.remove('favorite');
+
+          const index = favoriteBooks.indexOf(id);
+          if (index !== -1) {
+            favoriteBooks.splice(index, 1);
+          }
+        } else {
+          // not favorite yet → add
+          image.classList.add('favorite');
+
+          if (id && !favoriteBooks.includes(id)) {
+            favoriteBooks.push(id);
+          }
         }
 
-        // (optional) debug in console:
+        // (optional) debug
         // console.log('favoriteBooks:', favoriteBooks);
       });
     }
