@@ -15,14 +15,16 @@
 
       <!-- FILTERS FORM -->
       <section class="filters">
-        <div>
+        <form>
           <label>
             Adults only: <input name="filter" value="adults" type="checkbox">
           </label>
           <label>
             Non-fiction: <input name="filter" value="nonFiction" type="checkbox">
           </label>
-        </div>
+          <!-- ukryty przycisk submit dla walidatora -->
+          <button type="submit" hidden></button>
+        </form>
       </section>
 
       <!-- BOOKS PANEL -->
@@ -36,8 +38,7 @@
 
   <!-- BOOK TEMPLATE -->
   <script id="template-book" type="text/x-handlebars-template">
-    <li class="book">
-
+    <li class="book" data-id="{{ id }}">
       <!-- title and price -->
       <header class="book__header">
         <h2 class="book__name">{{ name }}</h2>
@@ -53,18 +54,19 @@
 
       <!-- ratings -->
       <div class="book__rating">
-        <div class="book__rating__fill">
+        <div class="book__rating__fill" style="width: {{ ratingWidth }}%; background: {{ ratingBgc }}">
           {{ rating }}/10
         </div>
       </div>
-
-
     </li>
   </script>
 
+  <!-- scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
   <script src="js/functions.js"></script>
   <script src="js/data.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
+
+
